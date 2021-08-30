@@ -8,6 +8,9 @@ int i=0;
 int para1,para2;
 
 int read_file(FILE *fp);
+int write_file(FILE *fp, int result);
+int extract1(FILE *fp);
+int extract2(FILE *fp);
 
 int main(){
     FILE *fp_read=fopen("question.txt","r");
@@ -23,23 +26,23 @@ int main(){
     fseek(fp_write,0,SEEK_SET);
     int fun_type=read_file(fp_read);
     if(fun_type>=1&&fun_type<=4){
-        if(extract1(fp_read)==0){
+        if(extract1(fp_read)==-1){
             printf("WRONG FORMAT!");
             return 0;
         }
         switch (fun_type)
         {
         case 1:
-            /* code */
+            write_file(fp_write, para1+para2);
             break;
         case 2:
-            /* code */
+            write_file(fp_write, para1-para2);
             break;
         case 3:
-            /* code */
+            write_file(fp_write, para1*para2);
             break;
         case 4:
-            /* code */
+            write_file(fp_write, para1/para2);
             break;
         
         default:
@@ -71,4 +74,30 @@ int read_file(FILE *fp){
         return 5;
     else
         return 0;
+}
+
+int extract1(FILE *fp){
+    int i=0;
+    while(scan_fun[i]!='('){
+        i++;
+    }
+    char *num=&scan_fun[i+1];
+    if(sscanf(num,"%d%*c%d%*c",para1,para2)==EOF)
+        return -1;
+    return 0;
+}
+
+int extract2(FILE *fp){
+    int i=0;
+    while(scan_fun[i]!='('){
+        i++;
+    }
+    char *num=&scan_fun[i+1];
+    if(sscanf(num,"%d%*c",para1)==EOF)
+        return -1;
+    return 0;
+}
+
+int write_file(FILE *fp, int result){
+
 }
