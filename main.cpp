@@ -66,6 +66,15 @@ int main()
             write_file(fp_write, para1 * 2);
         }
     }
+    //debug the result
+    printf("Successfully wrote results in \"answer.txt\"\n");
+    fseek(fp_write,0,SEEK_SET);
+    c = fgetc(fp_write);
+    while (c != EOF)
+    {
+        printf ("%c", c);
+        c = fgetc(fp_write);
+    }
     return 0;
 }
 
