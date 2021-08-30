@@ -23,8 +23,8 @@ int main()
         fputc(c, fp_write);
         c = fgetc(fp_read);
     }
-    fseek(fp_read, 0, SEEK_SET);
-    fseek(fp_write, 0, SEEK_SET);
+    rewind(fp_read);
+    rewind(fp_write);
     while (1)
     {
         int fun_type = read_file(fp_read);
