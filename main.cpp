@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-char scan_fun[10];
-int i = 0;
+char scan_fun[20];
 
 int para1, para2;
+int count = 0;
 
 int read_file(FILE *fp);
 int write_file(FILE *fp, int result);
@@ -28,7 +28,7 @@ int main()
     while (1)
     {
         int fun_type = read_file(fp_read);
-        if(fun_type==-1)
+        if (fun_type == -1)
             return 0;
         if (fun_type >= 1 && fun_type <= 4)
         {
@@ -65,14 +65,15 @@ int main()
             }
             write_file(fp_write, para1 * 2);
         }
+        count++;
     }
     //debug the result
     printf("Successfully wrote results in \"answer.txt\"\n");
-    fseek(fp_write,0,SEEK_SET);
+    fseek(fp_write, 0, SEEK_SET);
     c = fgetc(fp_write);
     while (c != EOF)
     {
-        printf ("%c", c);
+        printf("%c", c);
         c = fgetc(fp_write);
     }
     return 0;
@@ -80,29 +81,50 @@ int main()
 
 int read_file(FILE *fp)
 {
+    int i = 0;
+    int p_bracket;
     while (1)
     {
         scan_fun[i] = fgetc(fp);
-        if(scan_fun[i]==EOF)
+        if (scan_fun[i] == EOF)
             return -1;
         if (scan_fun[i] == '(')
+        {
+            p_bracket = i;
+            scan_fun[i] = 0;
+        }
+        else if (scan_fun[i] == '\n')
         {
             scan_fun[i] = 0;
             break;
         }
-        else if (scan_fun[i] == 0)
-            return 0;
+        i++;
     }
-    if (strcmp(scan_fun, "add"))
+    if (strcmp(scan_fun, "add") == 0)
+    {
+        scan_fun[p_bracket] = '(';
         return 1;
-    else if (strcmp(scan_fun, "sub"))
+    }
+    else if (strcmp(scan_fun, "sub") == 0)
+    {
+        scan_fun[p_bracket] = '(';
         return 2;
-    else if (strcmp(scan_fun, "muti"))
+    }
+    else if (strcmp(scan_fun, "muti") == 0)
+    {
+        scan_fun[p_bracket] = '(';
         return 3;
-    else if (strcmp(scan_fun, "div"))
+    }
+    else if (strcmp(scan_fun, "div") == 0)
+    {
+        scan_fun[p_bracket] = '(';
         return 4;
-    else if (strcmp(scan_fun, "doubleMe"))
+    }
+    else if (strcmp(scan_fun, "doubleMe") == 0)
+    {
+        scan_fun[p_bracket] = '(';
         return 5;
+    }
     else
         return 0;
 }
@@ -114,8 +136,9 @@ int extract1(FILE *fp)
     {
         i++;
     }
-    char *num = &scan_fun[i + 1];
-    if (sscanf(num, "%d%*c%d%*c", para1, para2) == EOF)
+    char *num;
+    num = &scan_fun[i + 1];
+    if (sscanf(num, "%d%*c%d%*c", &para1, &para2) == EOF)
         return -1;
     return 0;
 }
@@ -135,6 +158,12 @@ int extract2(FILE *fp)
 
 int write_file(FILE *fp, int result)
 {
-    while(fgetc(fp)!='\n');
-    fprintf(fp,"=%d",result);
+    char temp[10];
+    int i = 1;
+    while (i++ <= count)
+    {
+        fgets(temp, 10, fp);
+    }
+    fseek(fp, -1, SEEK_CUR);
+    fprintf(fp, "=%d", result);
 }
